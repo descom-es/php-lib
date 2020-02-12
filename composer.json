@@ -1,0 +1,51 @@
+{
+    "name": "descom/notification_manager",
+    "description": "Package for Descom Notification manager",
+    "keywords": [
+        "descom",
+        "notification_manager"
+    ],
+    "homepage": "https://github.com/descom/notification_manager",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Descom",
+            "email": "soporte@descom.es",
+            "homepage": "https://descom.es",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.3",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0",
+        "orchestra/testbench": "~3.4.2|^3.8.0|^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Descom\\NotificationManager\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Descom\\NotificationManager\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Descom\\NotificationManager\\NotificationManagerServiceProvider"
+            ]
+        }
+    }
+}
