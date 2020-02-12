@@ -1,11 +1,11 @@
 {
-    "name": "descom/notification_manager",
-    "description": "Package for Descom Notification manager",
+    "name": "descom-es/php-lib",
+    "description": "Package for Descom",
     "keywords": [
         "descom",
-        "notification_manager"
+        ""
     ],
-    "homepage": "https://github.com/descom/notification_manager",
+    "homepage": "https://github.com/descom-es/php-lib",
     "license": "MIT",
     "authors": [
         {
