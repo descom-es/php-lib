@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace DescomLib\Tests;
 
 use PHPUnit\Framework\TestCase;
 

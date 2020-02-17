@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Services\NotificationManager;
+namespace DescomLib\Tests\Services\NotificationManager;
 
-use Tests\TestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use DescomLib\Tests\TestCase;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Handler\MockHandler;
 use DescomLib\Exceptions\PermanentException;

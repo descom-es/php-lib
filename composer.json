@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Descom\\NotificationManager\\": "src"
+            "DescomLib\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Descom\\NotificationManager\\Tests\\": "tests"
+            "DescomLib\\Tests\\": "tests"
         }
     },
     "scripts": {
