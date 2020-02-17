@@ -1,10 +1,10 @@
 <?php
 
-namespace Descom\NotificationManager;
+namespace DescomLib;
 
 use Illuminate\Support\ServiceProvider;
 
-class NotificationManagerServiceProvider extends ServiceProvider
+class DescomLibServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -13,7 +13,7 @@ class NotificationManagerServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/notification_manager.php' => config_path('notification_manager.php'),
+                __DIR__.'/../config/descom_lib.php' => config_path('descom_lib.php'),
             ], 'config');
         }
     }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Descom\NotificationManager\Tests;
+namespace Tests;
 
+use DescomLib\DescomLibServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Descom\NotificationManager\NotificationManagerServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
@@ -20,7 +20,7 @@ abstract class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            NotificationManagerServiceProvider::class,
+            DescomLibServiceProvider::class,
         ];
     }
 
@@ -31,7 +31,7 @@ abstract class TestCase extends Orchestra
      */
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('notification_manager.url', "http://notification-manager.descom.es/api");
-        $app['config']->set('notification_manager.token', "");
+        $app['config']->set('descom_lib.notification_manager.url', "http://notification-manager.descom.es/api");
+        $app['config']->set('descom_lib.notification_manager.token', "");
     }
 }

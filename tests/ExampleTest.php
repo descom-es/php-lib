@@ -1,6 +1,6 @@
 <?php
 
-namespace Descom\NotificationManager\Tests;
+namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 
