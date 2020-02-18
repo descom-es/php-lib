@@ -24,22 +24,25 @@ class NotificationManager
     }
 
     /**
-     * Undocumented function
+     * To mock
      *
-     * @param Client $client
-     * @return void
+     * @param GuzzleHttp\Client $client
+     * @return self
      */
     public function setClient(Client $client)
     {
         $this->client = $client;
+        
+        return $this;
     }
 
     /**
-     * Undocumented function
+     * Send request
      *
-     * @param [type] $function
-     * @param [type] $data
-     * @return void
+     * @param array $data
+     * @throws DescomLib\Exceptions\TemporaryException
+     * @throws DescomLib\Exceptions\PermanentException
+     * @return object
      */
     public function send($data)
     {
@@ -61,9 +64,11 @@ class NotificationManager
             if ($response->getStatusCode() < 300) {
                 return json_decode($response->getBody()->getContents());
             }
+            
             if ($response->getStatusCode() == 503) {
                 throw new TemporaryException("Temporal error", 503);
             }
+            
             throw new PermanentException("Permanent error", $response->getStatusCode());
         } catch (RequestException $e) {
             throw new TemporaryException($e->getMessage(), $e->getCode());
