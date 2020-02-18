@@ -29,7 +29,7 @@ class NotificationManagerTest extends TestCase
 
         $response = $notificationManager->send("logged_email", $data);
 
-        $this->assertEquals($responseExpected, $response);
+        $this->assertEquals($responseExpected, (array)$response);
     }
 
     public function testLoggedEmailPermanentException()

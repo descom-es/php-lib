@@ -59,7 +59,7 @@ class NotificationManager
             );
 
             if ($response->getStatusCode() < 300) {
-                return $response->json();
+                return json_decode($response->getBody()->getContents());
             }
             if ($response->getStatusCode() == 503) {
                 throw new TemporaryException("Temporal error", 503);
