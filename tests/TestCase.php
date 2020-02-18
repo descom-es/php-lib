@@ -1,6 +1,6 @@
 <?php
 
-namespace DescomLib\Tests;
+namespace Tests;
 
 use DescomLib\DescomLibServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;

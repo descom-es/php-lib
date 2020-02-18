@@ -1,10 +1,10 @@
 <?php
 
-namespace DescomLib\Tests\Services\NotificationManager;
+namespace Tests;
 
+use Tests\TestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
-use DescomLib\Tests\TestCase;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Handler\MockHandler;
 use DescomLib\Exceptions\PermanentException;
@@ -34,6 +34,8 @@ class NotificationManagerTest extends TestCase
 
     public function testLoggedEmailPermanentException()
     {
+        $this->expectException(PermanentException::class);
+
         $data = [];
 
         $mock = new MockHandler([new Response(404, [], null)]);
@@ -44,12 +46,12 @@ class NotificationManagerTest extends TestCase
         $notificationManager->setClient($client);
 
         $response = $notificationManager->send("logged_email", $data);
-
-        $this->assertEquals(get_class(PermanentException), get_class($response));
     }
 
     public function testLoggedEmailTemporaryException()
     {
+        $this->expectException(TemporaryException::class);
+
         $data = [];
 
         $mock = new MockHandler([new Response(503, [], null)]);
@@ -60,7 +62,5 @@ class NotificationManagerTest extends TestCase
         $notificationManager->setClient($client);
 
         $response = $notificationManager->send("logged_email", $data);
-
-        $this->assertEquals(get_class(TemporaryException), get_class($response));
     }
 }

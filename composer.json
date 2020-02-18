@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "DescomLib\\": "src"
+            "DescomLib\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DescomLib\\Tests\\": "tests"
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
