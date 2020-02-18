@@ -19,8 +19,8 @@ class NotificationManager
     public function __construct()
     {
         $this->client = new Client();
-        $this->url = config('notification_manager.url');
-        $this->token = config('notification_manager.token');
+        $this->url = config('descom_lib.notification_manager.url');
+        $this->token = config('descom_lib.notification_manager.token');
     }
 
     /**
@@ -32,7 +32,7 @@ class NotificationManager
     public function setClient(Client $client)
     {
         $this->client = $client;
-        
+
         return $this;
     }
 
@@ -64,11 +64,11 @@ class NotificationManager
             if ($response->getStatusCode() < 300) {
                 return json_decode($response->getBody()->getContents());
             }
-            
+
             if ($response->getStatusCode() == 503) {
                 throw new TemporaryException("Temporal error", 503);
             }
-            
+
             throw new PermanentException("Permanent error", $response->getStatusCode());
         } catch (RequestException $e) {
             throw new TemporaryException($e->getMessage(), $e->getCode());
