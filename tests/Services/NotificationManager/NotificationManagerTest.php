@@ -27,7 +27,7 @@ class NotificationManagerTest extends TestCase
         $notificationManager = new NotificationManager;
         $notificationManager->setClient($client);
 
-        $response = $notificationManager->send("logged_email", $data);
+        $response = $notificationManager->send($data);
 
         $this->assertEquals($responseExpected, (array)$response);
     }
@@ -45,7 +45,7 @@ class NotificationManagerTest extends TestCase
         $notificationManager = new NotificationManager;
         $notificationManager->setClient($client);
 
-        $response = $notificationManager->send("logged_email", $data);
+        $response = $notificationManager->send($data);
     }
 
     public function testLoggedEmailTemporaryException()
@@ -61,6 +61,6 @@ class NotificationManagerTest extends TestCase
         $notificationManager = new NotificationManager;
         $notificationManager->setClient($client);
 
-        $response = $notificationManager->send("logged_email", $data);
+        $response = $notificationManager->send($data);
     }
 }
