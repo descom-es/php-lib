@@ -2,8 +2,7 @@
     "name": "descom-es/php-lib",
     "description": "Package for Descom",
     "keywords": [
-        "descom",
-        ""
+        "descom"
     ],
     "homepage": "https://github.com/descom-es/php-lib",
     "license": "MIT",
@@ -35,7 +34,7 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+        "test-coverage": "vendor/bin/phpunit --coverage-txt"
 
     },
     "config": {
@@ -44,7 +43,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Descom\\NotificationManager\\NotificationManagerServiceProvider"
+                "DescomLib\\DescomLibServiceProvider"
             ]
         }
     }
