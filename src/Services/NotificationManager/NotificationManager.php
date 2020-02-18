@@ -41,12 +41,12 @@ class NotificationManager
      * @param [type] $data
      * @return void
      */
-    public function send($function, $data)
+    public function send($data)
     {
         try {
             $response = $this->client->request(
                 'POST',
-                $this->url . '/' . $function,
+                $this->url,
                 [
                     'headers' => [
                         'Accept'        => 'application/json',
@@ -64,9 +64,9 @@ class NotificationManager
             if ($response->getStatusCode() == 503) {
                 throw new TemporaryException("Temporal error", 503);
             }
-            throw new PermanentException("Permanent error", 503);
+            throw new PermanentException("Permanent error", $response->getStatusCode());
         } catch (RequestException $e) {
-            throw new TemporaryException($e->getMessage(), 503);
+            throw new TemporaryException($e->getMessage(), $e->getCode());
         }
     }
 }
