@@ -12,8 +12,8 @@ composer require descom/php-lib
 Publish package config file:
 ```bash
 php artisan vendor:publish
-(Select Provider: DescomLib\DescomLibServiceProvider)
 ```
+- Select Provider: DescomLib\DescomLibServiceProvider
 
 Insert token in config/descom_lib.php
 
