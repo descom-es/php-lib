@@ -5,12 +5,7 @@ php:
   - 7.3
   - 7.4
 
-env:
-  - COMPOSER="5.8"
-  - COMPOSER=""
-
 before_script:
-  - test ${COMPOSER_FLAGS} && cp composer-${COMPOSER_FLAGS}.json composer.json
   - travis_retry composer self-update
   - travis_retry composer update --no-interaction --prefer-source
 
