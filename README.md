@@ -6,7 +6,7 @@
 You can install the package via composer:
 
 ```bash
-composer require descom-es/php-lib
+composer require descom/php-lib
 ```
 
 Publish package config file:
