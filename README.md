@@ -11,7 +11,7 @@ composer require descom/php-lib
 
 Publish package config file:
 ```bash
-php artisan vendor:publish
+php artisan vendor:publish --provider="DescomLib\DescomLibServiceProvider" --tag=config
 ```
 - Select Provider: DescomLib\DescomLibServiceProvider
 
@@ -51,5 +51,15 @@ Data example for $notificationManager->send($data);
             'domain'  => 'test.com',
         ]
     ]
+]
+```
+
+```bash
+[
+    'action' => 'loggedEmailWithoutSSL',
+    'data'   => [
+        'email'        => 'test@descom.es',
+        'subscription' => 'descom.es',
+    ],
 ]
 ```
