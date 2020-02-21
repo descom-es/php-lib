@@ -9,7 +9,9 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Handler\MockHandler;
 use DescomLib\Exceptions\PermanentException;
 use DescomLib\Exceptions\TemporaryException;
+use DescomLib\Services\NotificationManager\Events\NotificationFailed;
 use DescomLib\Services\NotificationManager\NotificationManager;
+use Illuminate\Support\Facades\Event;
 
 class NotificationManagerTest extends TestCase
 {
@@ -34,7 +36,7 @@ class NotificationManagerTest extends TestCase
 
     public function testLoggedEmailPermanentException()
     {
-        $this->expectException(PermanentException::class);
+        Event::fake();
 
         $data = [];
 
@@ -45,12 +47,16 @@ class NotificationManagerTest extends TestCase
         $notificationManager = new NotificationManager;
         $notificationManager->setClient($client);
 
-        $response = $notificationManager->send($data);
+        $notificationManager->send($data);
+
+        Event::assertDispatched(NotificationFailed::class, function (NotificationFailed $event) {
+            return $event->exception instanceof PermanentException;
+        });
     }
 
     public function testLoggedEmailTemporaryException()
     {
-        $this->expectException(TemporaryException::class);
+        Event::fake();
 
         $data = [];
 
@@ -61,6 +67,10 @@ class NotificationManagerTest extends TestCase
         $notificationManager = new NotificationManager;
         $notificationManager->setClient($client);
 
-        $response = $notificationManager->send($data);
+        $notificationManager->send($data);
+
+        Event::assertDispatched(NotificationFailed::class, function (NotificationFailed $event) {
+            return $event->exception instanceof TemporaryException;
+        });
     }
 }
