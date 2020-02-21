@@ -6,6 +6,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use DescomLib\Exceptions\PermanentException;
 use DescomLib\Exceptions\TemporaryException;
+use DescomLib\Services\NotificationManager\Events\NotificationFailed;
+use Illuminate\Support\Facades\Event;
 
 class NotificationManager
 {
@@ -37,18 +39,15 @@ class NotificationManager
     }
 
     /**
-     * Send request
+     * Send request to Notification Manager service
      *
      * @param array $data
-     * @throws DescomLib\Exceptions\TemporaryException
-     * @throws DescomLib\Exceptions\PermanentException
-     * @return object
+     * @return object|null
      */
-    public function send($data)
+    public function send(array $data): ?object
     {
         try {
-            $response = $this->client->request(
-                'POST',
+            $response = $this->client->post(
                 $this->url,
                 [
                     'headers' => [
@@ -66,12 +65,23 @@ class NotificationManager
             }
 
             if ($response->getStatusCode() == 503) {
-                throw new TemporaryException("Temporal error", 503);
+                Event::dispatch(new NotificationFailed(
+                    $data,
+                    new TemporaryException("Temporal error", $response->getStatusCode())
+                ));
+            } else {
+                Event::dispatch(new NotificationFailed(
+                    $data,
+                    new PermanentException("Permanent error", $response->getStatusCode())
+                ));
             }
-
-            throw new PermanentException("Permanent error", $response->getStatusCode());
         } catch (RequestException $e) {
-            throw new TemporaryException($e->getMessage(), $e->getCode());
+            Event::dispatch(new NotificationFailed(
+                $data,
+                new TemporaryException($e->getMessage(), $e->getCode())
+            ));
         }
+
+        return null;
     }
 }
