@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/descom-es/php-lib.svg?branch=master)](https://travis-ci.org/descom-es/php-lib)
 
 
-## Installation
+# Installation
 
 You can install the package via composer:
 
@@ -18,16 +18,17 @@ php artisan vendor:publish --provider="DescomLib\DescomLibServiceProvider" --tag
 Insert token in config/descom_lib.php
 
 
-### Testing
+# Notificacation Manager Serviice
 
-``` bash
-composer test
-```
+With method `send`, you can send a request to service.
 
+Thie method require `$data` argument. See samples
 
-### Data
+## Events
 
-Data example for $notificationManager->send($data);
+* DescomLib\Services\NotificationManager\Events\NotificationFailed
+
+## Samples Data
 
 ```bash
 [
@@ -62,4 +63,10 @@ Data example for $notificationManager->send($data);
         'subscription' => 'descom.es',
     ],
 ]
+```
+
+# Testing
+
+``` bash
+composer test
 ```
