@@ -34,9 +34,9 @@ Thie method require `$data` argument. See samples
 [
     'action' => 'loggedEmail',
     'data'   => [
-        'email'        => 'test@descom.es',
-        'subscription' => 'descom.es',
-        'ip'           => '54.194.66.61',
+        'email'        => 'test@example.com',
+        'subscription' => 'example.com',
+        'ip'           => '192.168.0.1',
         'geo'          => [
             'country' => [
                 'name' => 'España',
@@ -44,7 +44,7 @@ Thie method require `$data` argument. See samples
             ]
         ],
         'instance'=> [
-            'hostname' => 'dcaw-019.test.es',
+            'hostname' => 'hostname',
             'name'     => 'DC/TEST/Linux/01',
         ],
         'dns'  => [
@@ -59,8 +59,8 @@ Thie method require `$data` argument. See samples
 [
     'action' => 'loggedEmailWithoutSSL',
     'data'   => [
-        'email'        => 'test@descom.es',
-        'subscription' => 'descom.es',
+        'email'        => 'test@example.com',
+        'subscription' => 'example.com',
     ],
 ]
 ```
