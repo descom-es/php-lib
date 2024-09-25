@@ -2,16 +2,14 @@
 
 namespace Tests;
 
-use Tests\TestCase;
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Handler\MockHandler;
 use DescomLib\Exceptions\PermanentException;
 use DescomLib\Exceptions\TemporaryException;
 use DescomLib\Services\NotificationManager\Events\NotificationFailed;
 use DescomLib\Services\NotificationManager\NotificationManager;
+use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Mock\Client as MockClient;
 use Illuminate\Support\Facades\Event;
+use Tests\TestCase;
 
 class NotificationManagerTest extends TestCase
 {
@@ -22,12 +20,16 @@ class NotificationManagerTest extends TestCase
             'message' => 'Notificaciones enviadas con éxito'
         ];
 
-        $mock = new MockHandler([new Response(200, [], json_encode($responseExpected))]);
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        $mockClient = new MockClient();
+        $responseFactory = Psr17FactoryDiscovery::findResponseFactory();
+        $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
+        $response = $responseFactory->createResponse(200)
+            ->withBody($streamFactory->createStream(json_encode($responseExpected)));
+
+        $mockClient->addResponse($response);
 
         $notificationManager = new NotificationManager;
-        $notificationManager->setClient($client);
+        $notificationManager->setClient($mockClient);
 
         $response = $notificationManager->send($data);
 
@@ -40,12 +42,14 @@ class NotificationManagerTest extends TestCase
 
         $data = [];
 
-        $mock = new MockHandler([new Response(404, [], null)]);
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        $mockClient = new MockClient();
+
+        $responseFactory = Psr17FactoryDiscovery::findResponseFactory();
+        $response = $responseFactory->createResponse(404);
+        $mockClient->addResponse($response);
 
         $notificationManager = new NotificationManager;
-        $notificationManager->setClient($client);
+        $notificationManager->setClient($mockClient);
 
         $notificationManager->send($data);
 
@@ -60,12 +64,15 @@ class NotificationManagerTest extends TestCase
 
         $data = [];
 
-        $mock = new MockHandler([new Response(503, [], null)]);
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        $mockClient = new MockClient();
+
+        $responseFactory = Psr17FactoryDiscovery::findResponseFactory();
+        $response = $responseFactory->createResponse(503);
+        $mockClient->addResponse($response);
+
 
         $notificationManager = new NotificationManager;
-        $notificationManager->setClient($client);
+        $notificationManager->setClient($mockClient);
 
         $notificationManager->send($data);
 

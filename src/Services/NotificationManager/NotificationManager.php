@@ -2,25 +2,33 @@
 
 namespace DescomLib\Services\NotificationManager;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use DescomLib\Exceptions\PermanentException;
 use DescomLib\Exceptions\TemporaryException;
 use DescomLib\Services\NotificationManager\Events\NotificationFailed;
+use Exception;
+use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Discovery\Psr18Client;
 use Illuminate\Support\Facades\Event;
+use Psr\Http\Client\ClientInterface;
 
 class NotificationManager
 {
-    protected $client = null;
-    protected $url = null;
-    protected $token = null;
+    protected $client;
+    protected $url;
+    protected $token;
+    protected $requestFactory;
+    protected $streamFactory;
 
     /**
      * Create a new NotificationManager Instance.
      */
     public function __construct()
     {
-        $this->client = new Client();
+        $this->client = new Psr18Client();
+
+        $this->requestFactory = Psr17FactoryDiscovery::findRequestFactory();
+        $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
+
         $this->url = config('descom_lib.notification_manager.url');
         $this->token = config('descom_lib.notification_manager.token');
     }
@@ -28,13 +36,12 @@ class NotificationManager
     /**
      * To mock
      *
-     * @param GuzzleHttp\Client $client
+     * @param ClientInterface $client
      * @return self
      */
-    public function setClient(Client $client)
+    public function setClient(ClientInterface $client): self
     {
         $this->client = $client;
-
         return $this;
     }
 
@@ -47,18 +54,12 @@ class NotificationManager
     public function send(array $data): ?object
     {
         try {
-            $response = $this->client->post(
-                $this->url,
-                [
-                    'headers' => [
-                        'Accept'        => 'application/json',
-                        'Authorization' => $this->token
-                    ],
-                    'http_errors'     => false,
-                    'connect_timeout' => 30,
-                    'json'            => $data
-                ]
-            );
+            $request = $this->requestFactory->createRequest('POST', $this->url)
+                ->withHeader('Accept', 'application/json')
+                ->withHeader('Authorization', $this->token)
+                ->withBody($this->streamFactory->createStream(json_encode($data)));
+
+            $response = $this->client->sendRequest($request);
 
             if ($response->getStatusCode() < 300) {
                 return json_decode($response->getBody()->getContents());
@@ -75,7 +76,7 @@ class NotificationManager
                     new PermanentException("Permanent error", $response->getStatusCode())
                 ));
             }
-        } catch (RequestException $e) {
+        } catch (Exception $e) {
             Event::dispatch(new NotificationFailed(
                 $data,
                 new TemporaryException($e->getMessage(), $e->getCode())
