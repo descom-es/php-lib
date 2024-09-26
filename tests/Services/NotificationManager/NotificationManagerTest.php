@@ -21,7 +21,7 @@ class NotificationManagerTest extends TestCase
 
         // Simula la respuesta HTTP
         Http::fake([
-            config('descom_lib.notification_manager.url') => Http::sequence()->push($responseExpected)
+            '*' => Http::response($responseExpected, 200)
         ]);
 
         $notificationManager = new NotificationManager;
@@ -39,7 +39,7 @@ class NotificationManagerTest extends TestCase
 
         // Simula la respuesta HTTP con un código 404
         Http::fake([
-            config('descom_lib.notification_manager.url') => Http::response(null, 404)
+            '*' => Http::response([], 404)
         ]);
 
         $notificationManager = new NotificationManager;
@@ -59,7 +59,7 @@ class NotificationManagerTest extends TestCase
 
         // Simula la respuesta HTTP con un código 503
         Http::fake([
-            config('descom_lib.notification_manager.url') => Http::response(null, 503)
+            '*' => Http::response([], 503)
         ]);
 
         $notificationManager = new NotificationManager;
