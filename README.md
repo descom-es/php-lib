@@ -1,4 +1,7 @@
-[![Build Status](https://travis-ci.org/descom-es/php-lib.svg?branch=master)](https://travis-ci.org/descom-es/php-lib)
+# Descom php-lib
+
+[![tests](https://github.com/descom-es/php-lib/actions/workflows/tests.yml/badge.svg)](https://github.com/descom-es/php-lib/actions/workflows/tests.yml)
+[![analyze](https://github.com/descom-es/php-lib/actions/workflows/analyze.yml/badge.svg)](https://github.com/descom-es/php-lib/actions/workflows/analyze.yml)
 
 
 # Installation
