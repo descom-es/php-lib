@@ -33,4 +33,4 @@ jobs:
           composer install --no-interaction --no-progress
 
       - name: Run analyse phpstan
-        run: vendor/bin/phpstan analyse --error-format github
+        run: vendor/bin/phpstan analyse src tests --error-format github
