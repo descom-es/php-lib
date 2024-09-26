@@ -2,8 +2,7 @@
 
 namespace DescomLib\Services\NotificationManager;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Http;
 use DescomLib\Exceptions\PermanentException;
 use DescomLib\Exceptions\TemporaryException;
 use DescomLib\Services\NotificationManager\Events\NotificationFailed;
@@ -11,7 +10,6 @@ use Illuminate\Support\Facades\Event;
 
 class NotificationManager
 {
-    protected $client = null;
     protected $url = null;
     protected $token = null;
 
@@ -20,22 +18,8 @@ class NotificationManager
      */
     public function __construct()
     {
-        $this->client = new Client();
         $this->url = config('descom_lib.notification_manager.url');
         $this->token = config('descom_lib.notification_manager.token');
-    }
-
-    /**
-     * To mock
-     *
-     * @param GuzzleHttp\Client $client
-     * @return self
-     */
-    public function setClient(Client $client)
-    {
-        $this->client = $client;
-
-        return $this;
     }
 
     /**
@@ -47,35 +31,27 @@ class NotificationManager
     public function send(array $data): ?object
     {
         try {
-            $response = $this->client->post(
-                $this->url,
-                [
-                    'headers' => [
-                        'Accept'        => 'application/json',
-                        'Authorization' => $this->token
-                    ],
-                    'http_errors'     => false,
-                    'connect_timeout' => 30,
-                    'json'            => $data
-                ]
-            );
+            $response = Http::withHeaders([
+                'Accept'        => 'application/json',
+                'Authorization' => $this->token,
+            ])->timeout(30)->post($this->url, $data);
 
-            if ($response->getStatusCode() < 300) {
-                return json_decode($response->getBody()->getContents());
+            if ($response->successful()) {
+                return $response->object(); // Retorna como un objeto
             }
 
-            if ($response->getStatusCode() == 503) {
+            if ($response->status() === 503) {
                 Event::dispatch(new NotificationFailed(
                     $data,
-                    new TemporaryException("Temporal error", $response->getStatusCode())
+                    new TemporaryException("Temporary error", $response->status())
                 ));
             } else {
                 Event::dispatch(new NotificationFailed(
                     $data,
-                    new PermanentException("Permanent error", $response->getStatusCode())
+                    new PermanentException("Permanent error", $response->status())
                 ));
             }
-        } catch (RequestException $e) {
+        } catch (\Exception $e) {
             Event::dispatch(new NotificationFailed(
                 $data,
                 new TemporaryException($e->getMessage(), $e->getCode())

@@ -3,15 +3,12 @@
 namespace Tests;
 
 use Tests\TestCase;
-use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Handler\MockHandler;
 use DescomLib\Exceptions\PermanentException;
 use DescomLib\Exceptions\TemporaryException;
 use DescomLib\Services\NotificationManager\Events\NotificationFailed;
 use DescomLib\Services\NotificationManager\NotificationManager;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Http;
 
 class NotificationManagerTest extends TestCase
 {
@@ -22,12 +19,12 @@ class NotificationManagerTest extends TestCase
             'message' => 'Notificaciones enviadas con éxito'
         ];
 
-        $mock = new MockHandler([new Response(200, [], json_encode($responseExpected))]);
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        // Simula la respuesta HTTP
+        Http::fake([
+            config('descom_lib.notification_manager.url') => Http::sequence()->push($responseExpected)
+        ]);
 
         $notificationManager = new NotificationManager;
-        $notificationManager->setClient($client);
 
         $response = $notificationManager->send($data);
 
@@ -40,12 +37,12 @@ class NotificationManagerTest extends TestCase
 
         $data = [];
 
-        $mock = new MockHandler([new Response(404, [], null)]);
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        // Simula la respuesta HTTP con un código 404
+        Http::fake([
+            config('descom_lib.notification_manager.url') => Http::response(null, 404)
+        ]);
 
         $notificationManager = new NotificationManager;
-        $notificationManager->setClient($client);
 
         $notificationManager->send($data);
 
@@ -60,12 +57,12 @@ class NotificationManagerTest extends TestCase
 
         $data = [];
 
-        $mock = new MockHandler([new Response(503, [], null)]);
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        // Simula la respuesta HTTP con un código 503
+        Http::fake([
+            config('descom_lib.notification_manager.url') => Http::response(null, 503)
+        ]);
 
         $notificationManager = new NotificationManager;
-        $notificationManager->setClient($client);
 
         $notificationManager->send($data);
 
