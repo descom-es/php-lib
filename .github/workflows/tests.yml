@@ -13,8 +13,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.1, 8.2, 8.3]
-        laravel: [8.*, 9.*, 10.*, 11.*]
+        php: [8.1, 8.2, 8.3, 8.4]
+        laravel: [8.*, 9.*, 10.*, 11.*, 12.*]
         include:
           - laravel: 8.*
             testbench: 6.*
@@ -24,14 +24,24 @@ jobs:
             testbench: 8.*
           - laravel: 11.*
             testbench: 9.*
+          - laravel: 12.*
+            testbench: 10.*
         exclude:
           - laravel: 8.*
             php: 8.2
           - laravel: 8.*
             php: 8.3
+          - laravel: 8.*
+            php: 8.4
           - laravel: 9.*
             php: 8.3
+          - laravel: 9.*
+            php: 8.4
+          - laravel: 10.*
+            php: 8.4
           - laravel: 11.*
+            php: 8.1
+          - laravel: 12.*
             php: 8.1
 
     steps:
@@ -44,13 +54,13 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: curl, pdo, sqlite, pdo_sqlite
 
+      - name: Validate composer.json
+        run: composer validate
+
       - name: Install SQLite 3
         run: |
           sudo apt-get update
           sudo apt-get install sqlite3
-
-      - name: Validate composer.json
-        run: composer validate
 
       - name: Cache Composer packages
         id: composer-cache
